@@ -16,6 +16,9 @@ COMPILER_$(sm)		?= $(COMPILER)
 include mk/$(COMPILER_$(sm)).mk
 
 cppflags$(sm)	+= -D__KERNEL__
+ifneq (,$(PLAT_UART_BASE))
+cppflags$(sm)	+= -DPLAT_UART_BASE=$(PLAT_UART_BASE)
+endif
 
 PLATFORM_FLAVOR ?= default
 platform_$(PLATFORM) := y

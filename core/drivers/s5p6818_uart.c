@@ -29,6 +29,7 @@
 #include <drivers/s5p6818_uart.h>
 #include <drivers/s5p6818_tieoff.h>
 #include <io.h>
+#include <compiler.h>
 
 /* NX_UART Registers */
 #define UARTDLCON		0x00   /* Line Control */
@@ -67,6 +68,8 @@
 #define NX_UARTTRSTAT_TXBE_BIT      (1 << 1)
 			/* Transmit BUFFER empty bit in UARTTRSTAT register */
 
+/* FIXME - Modify and use it after confirming the operation. */
+#if 0
 static int s5p6818_uart_get_ch_num(vaddr_t base)
 {
 	int ch = 0;
@@ -197,12 +200,6 @@ static void uart_tieoff_set(uint32_t ch)
 	};
 }
 
-void s5p6818_uart_flush(vaddr_t base)
-{
-	while (!(read32(base + UARTTRSTAT) & NX_UARTTRSTAT_TX_EMPTY_BIT))
-		;
-}
-
 void s5p6818_uart_init(vaddr_t base, uint32_t uart_clk, uint32_t baud_rate)
 {
 	int ch = s5p6818_uart_get_ch_num(base);
@@ -224,8 +221,20 @@ void s5p6818_uart_init(vaddr_t base, uint32_t uart_clk, uint32_t baud_rate)
 		write32(divisor / 16 - 1, base + UARTBRDR);
 		write32(divisor % 16, base + UARTFRACVAL);
 	}
+}
+#endif
 
-	s5p6818_uart_flush(base);
+void s5p6818_uart_flush(vaddr_t base)
+{
+	while (!(read32(base + UARTTRSTAT) & NX_UARTTRSTAT_TX_EMPTY_BIT))
+		;
+}
+
+void s5p6818_uart_init(vaddr_t base __unused,
+		uint32_t uart_clk __unused,
+		uint32_t baud_rate __unused)
+{
+	return;
 }
 
 void s5p6818_uart_putc(int ch, vaddr_t base)
