@@ -20,6 +20,11 @@ ifneq (,$(PLAT_UART_BASE))
 cppflags$(sm)	+= -DPLAT_UART_BASE=$(PLAT_UART_BASE)
 endif
 
+# Setup memory size
+ifneq (,$(PLAT_DRAM_SIZE))
+cppflags$(sm)	+= -DPLAT_DRAM_SIZE=$(PLAT_DRAM_SIZE)
+endif
+
 PLATFORM_FLAVOR ?= default
 platform_$(PLATFORM) := y
 platform_flavor_$(PLATFORM_FLAVOR) := y
