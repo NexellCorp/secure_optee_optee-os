@@ -551,6 +551,7 @@ uintptr_t tee_mmu_get_load_addr(const struct tee_ta_ctx *const ctx)
  * The MMU table for a target TA instance will be copied to this address
  * when tee core sets up TA context.
  */
+static int kmap_init;
 void tee_mmu_kmap_init(void)
 {
 	vaddr_t s = TEE_MMU_KMAP_START_VA;
@@ -565,6 +566,8 @@ void tee_mmu_kmap_init(void)
 		DMSG("Failed to init kmap. Trap CPU!");
 		panic();
 	}
+
+	kmap_init = 1;
 }
 
 TEE_Result tee_mmu_kmap_helper(tee_paddr_t pa, size_t len, void **va)
@@ -576,6 +579,11 @@ TEE_Result tee_mmu_kmap_helper(tee_paddr_t pa, size_t len, void **va)
 	uint32_t pa_e;
 	size_t n;
 	size_t offs;
+
+	if (kmap_init) {
+		tee_mmu_kmap_init();
+		kmap_init = 0;
+	}
 
 	if (!core_mmu_find_table(TEE_MMU_KMAP_START_VA, UINT_MAX, &tbl_info))
 		panic();
