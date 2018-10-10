@@ -21,6 +21,7 @@ cppflags$(sm)	+= -DPLAT_UART_BASE=$(PLAT_UART_BASE)
 endif
 
 # Setup memory size
+PLAT_DRAM_SIZE=256
 ifneq (,$(PLAT_DRAM_SIZE))
 cppflags$(sm)	+= -DPLAT_DRAM_SIZE=$(PLAT_DRAM_SIZE)
 endif
